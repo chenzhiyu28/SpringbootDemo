@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.Response;
-import com.example.demo.dto.StudentDTO;
+import com.example.demo.dao.dto.StudentDTO;
 import com.example.demo.service.StudentService;
 
 import org.springframework.beans.factory.annotation.Autowired;

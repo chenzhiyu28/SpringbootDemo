@@ -1,17 +1,20 @@
 package com.example.demo.service;
 
-import com.example.demo.converter.StudentConverter;
+import com.example.demo.dao.dto.StudentConverter;
 import com.example.demo.dao.Student;
 import com.example.demo.dao.StudentRepository;
-import com.example.demo.dto.StudentDTO;
+import com.example.demo.dao.StudentSearchCriteria;
+import com.example.demo.dao.StudentSpecifications;
+import com.example.demo.dao.dto.StudentDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service // 这个注解标注在类上，表示这是一个服务层组件, Spring 在扫描组件时将其注册为 Spring Bean
 public class StudentServiceImpl implements StudentService {
@@ -21,6 +24,9 @@ public class StudentServiceImpl implements StudentService {
     // StudentRepository 类型的实例。
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    private StudentSpecifications studentSpecifications;
 
     @Override
     public StudentDTO getStudentById(Long id) {
@@ -66,5 +72,14 @@ public class StudentServiceImpl implements StudentService {
 
         studentRepository.save(student);
         return StudentConverter.convertStudent(student);
+    }
+
+    @Override
+    public List<StudentDTO> findStudents(StudentSearchCriteria criteria) {
+        Specification<Student> spec = studentSpecifications.buildSpecification(criteria);
+        List<Student> students = studentRepository.findAll(spec);
+        return students.stream()
+                .map(StudentConverter::convertStudent)
+                .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.StudentDTO;
+import com.example.demo.dao.StudentSearchCriteria;
+import com.example.demo.dao.dto.StudentDTO;
+
+import java.util.List;
 
 public interface StudentService {
     StudentDTO getStudentById(Long id);
@@ -9,7 +12,8 @@ public interface StudentService {
 
     void deleteStudentById(Long id);
 
-
     StudentDTO updateStudentById(Long id, String name, String email);
+
+    List<StudentDTO> findStudents(StudentSearchCriteria criteria);
 }
 
